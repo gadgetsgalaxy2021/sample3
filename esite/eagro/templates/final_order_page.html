@@ -1,0 +1,23 @@
+{% extends 'index.html' %}
+{% block head %}
+{% block title %}
+Final Order Page
+{% endblock title %}
+{% endblock head %}
+{% block body %}
+{% comment %} {% for j in ok %} {% endcomment %}
+{% for product,range,nSlides in allProds%}
+{% for j in product %}
+{% comment %} {% if ok[j]==j.product_name%} {% endcomment %}
+<p>{{ok}}
+<p>{{j.product_name}}</p>
+{% comment %} {%endif%} {% endcomment %}
+{%endfor%}
+{%endfor%}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $("#navigationbar").css('margin-top',-24)
+</script>
+
+{%endblock body%}

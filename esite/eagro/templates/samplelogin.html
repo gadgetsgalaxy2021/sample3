@@ -1,0 +1,263 @@
+{% extends 'index.html' %}
+{% block head %}
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        color: #fff;
+    }
+
+    .container {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        flex-direction: column;
+    }
+
+    .box {
+        width: 350px;
+        height: 430px;
+        margin-top: -200px;
+        font-size: 16px;
+        padding: 20px 40px;
+        color:black;
+        background: #ffffff;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        border-radius: 0px;
+    }
+
+    .user {
+        margin-top: 50px;
+    }
+
+    .fas {
+        position: absolute;
+        margin-top: 8px;
+        margin-left: 8px;
+    }
+
+    input {
+        width: 270px;
+        margin-bottom: 25px;
+        padding: 0px 30px 10px;
+        font-size: 16px;
+        border: none;
+        padding:6px;
+        padding-left:30px;
+        border: 1px solid #0c0c0c;
+        outline: none;
+        background-color: transparent;
+        color: #000000;
+        transition: .2s all;
+    }
+
+    input:focus {
+        border: 2px solid #0c0c0c;
+    }
+
+    .reset-password {
+        color: #000000;
+        text-align: right;
+        margin-top: -13px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .reset-password:hover {
+        /* text-decoration: underline; */
+        color: #f80f07;
+        font-weight: bold;
+    }
+
+    .login-btn {
+        margin-top: 25px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .btnsubmit {
+        display: block;
+        width: 100px;
+        height: 35px;
+        text-align: center;
+        padding-top: 0px;
+        background-color: #0212f5;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 20px;
+        font-weight: 600;
+        opacity: 0.8;
+        transition: .2s all;
+        cursor: pointer;
+    }
+
+    .btnsubmit:hover {
+        opacity: 1;
+    }
+
+    .signupbtn{
+        color: #062bfc;
+        cursor: pointer;
+        transition: .2s color;
+    }
+
+    .signupbtn:hover{
+        color: #06fa12;
+        font-weight: bold;
+    }
+
+    .btn {
+        height: 38px;
+    }
+
+    .d-flex {
+        margin-top: 24px;
+    }
+
+    .login-btn .signup {
+        margin-top: 15px;
+    }
+
+    .lclosed {
+        position: relative;
+        left: 95%;
+        font-size: 25px;
+    }
+
+    .lclosed:hover {
+        color: red;
+        cursor: pointer;
+    }
+
+    .mobile nav {
+        height: 55px;
+        background-color: #deeff9;
+        width: 100%;
+        
+    }
+
+
+    @media only screen and (max-width: 600px) {
+
+        .lcard .box {
+            width: 350px;
+            height: 400px;
+        }
+        .menubarmob .menuclosesign {
+            left:84%;
+        }
+        .mobile nav{
+            margin-top:-23px;
+        }
+        .menubarmob{
+            background-color: black;
+        }
+
+        .btnsubmit {
+            padding: 8px;
+        }
+
+        .lcard user {
+            margin-top: 30px;
+            padding-left: -8px;
+        }
+
+        .lcard .box {
+            opacity: 1;
+        }
+
+    }
+
+    @media only screen and (min-width: 700px) {
+        .lcard .box {
+            width: 430px;
+            height: 500px;
+            margin-top: -50px;
+        }
+
+        .navbar {
+            margin-top: -24px;
+        }
+
+        .lh1 {
+            margin-top: 50px;
+        }
+
+        .user input {
+            width: 350px;
+        }
+
+        .login-btn .signup {
+            margin-top: 15px;
+        }
+    }
+</style>
+{% block title %}Login
+{% endblock title %}
+{% endblock head %}
+
+{% block body %}
+
+<div class="lcard .mobile" id="lcard">
+    <form method="POST" action="/loginuser"> 
+        {% csrf_token %}
+        <div class="container menublur">
+            <div class="box">
+                <i class="fas fa-times-circle lclosed"></i>
+                <h1 class="lh1">Log In</h1>
+                <div class="user">
+                    <i class="fas fa-user" style="font-size: 20px;"></i>
+                    <input type="text" name="lusername" id="lusername" autocomplete="off" placeholder="Username" />
+                    <i class="fas fa-unlock-alt" style="font-size: 20px;"></i>
+                    <input type="password" name="lpassword" id="lpassword" autocomplete="off" placeholder="Password" />
+                </div>
+                <p class="reset-password">Forget Password?</p>
+                <div class="login-btn">
+                    <button class="btnsubmit" type="submit">Login</button>
+                    <p class="signup">Didn't have a Account? <span><a href="signup" class="signupbtn" style="text-decoration: none;">Sign
+                                Up</a></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $('.lclosed').click(function () {
+        $("#lcard").hide();
+        $('#ml').css('margin-top',-20)
+        $('#dl1').css('margin-left',10)
+        $('.nav-item dropdown').hide()
+        $('.container-fluid').css('opacity', 1)
+        $('.mobile').css('opacity', 1)
+    })
+    $("#login").click(function () {
+        $("#lcard").show();
+        $("#lcard").css('z-index', '200')
+        $('.container-fluid').css('opacity', 0.4)
+    });
+
+    $("#moblogin").click(function () {
+        $("#lcard").show();
+        $("#lcard").css('z-index', '1000')
+        $('.mobile').css('opacity', 0.2)
+        $("#lcard").css('opacity', 1)
+    });
+    
+    if ($(window).width() < 600) {
+        $('#lcard').css('margin-top', '145px')
+    }
+    $(".menubar").click(function(){
+        $(".box").css('opacity','0.4')
+    })
+
+</script>
+{%endblock body%}

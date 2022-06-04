@@ -1,0 +1,123 @@
+{% extends 'index.html' %}
+{% block title %}
+{{prod.product_name}}
+{% endblock %}
+{% block body %}
+{% comment %} <h1 id="prodid" type="hidden">{{prod.id}}</h1> {% endcomment %}
+{%if messages%}
+{%for messages in messages%}
+<div class="alert alert-{{messages.tags}} alert-dismissible fade show" role="alert">
+    <strong>Message:</strong>{{messages}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+</div>
+{%endfor%}
+{%endif%}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row"><img src='/media/images/{{prod.product_icon}}' style="width:300px;height:200px;padding:7px"
+                    class="card-img-top" alt="...">
+            </div>
+        </div>
+        <div class="col-md-8">
+            {% csrf_token %}
+            <h3 id="prodname">{{prod.product_name}}</h3><br>
+            <label style="visibility: hidden;" name="pcat" id="pcat">{{prod.product_category}}</label>
+            <p><b>Price:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;</b>$<span id="prodprice">{{prod.product_price}}</span><br>
+                {%if prod.product_category != "Tools"%}
+                <b>Available Sizes:&nbsp;&nbsp;</b>
+
+                <span><input type="radio" class="btn-check" name="btnradio" value="500 g"  id="btnsize1" autocomplete="off" checked>
+                    <label class="btn btn-outline-primary avail" id="op1" style="height: 25px;width: auto;padding-top:0px"
+                        for="btnsize1">500 g</label></span>
+                <span><input type="radio" class="btn-check" name="btnradio" value="1 kg" id="btnsize2" autocomplete="off">
+                    <label class="btn btn-outline-primary avail"  id="op2" style="height: 25px;width: auto;padding-top:0px"
+                        for="btnsize2">1 Kg</label></span>
+                <span><input type="radio" class="btn-check" name="btnradio" value="5 kg" id="btnsize3" autocomplete="off">
+                    <label class="btn btn-outline-primary avail" id="op3" style="height: 25px;width: auto;padding-top:0px"
+                        for="btnsize3">5 kg</label></span><br>
+                {% endif %}
+                <b>Description:&nbsp;&nbsp;</b><br><span id="proddesc">{{prod.product_desc}}</span></p>
+            <b>Total:&nbsp;&nbsp;</b>$<span id="totprice">{{prod.product_price}}</span>
+            <div class="row my-4">
+                <button class="btn btn-primary mx-3" id="buynow" style="width: auto;height: 38px;">Buy Now</button>
+                <button id="pr{{prod.id}}" class="btn btn-primary cart" style="width: auto;height: 38px;" onclick="addcart()">Add to Cart</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% comment %} <script>
+    $('#buynow').click(function(){
+    {% if user.is_authenticated%}
+    <script>
+        alert("logind")
+
+    </script>
+    {%else%}
+    <script>
+        alert("anaony")
+        location.href="/loginuser"
+    </script>
+    {%endif%}
+});
+</script> {% endcomment %}
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $('#buynow').click(function(){
+        alert("ok")
+        // var pname=document.getElementById('prodname').innerHTML
+        // var pprice=document.getElementById('totprice').innerHTML
+        var puser={{request.user}}
+        alert(toString(puser))
+    })
+
+    document.getElementById('searchinsite').onclick=function(){
+        location.href="/open_search";
+    }
+    var a = document.getElementById('prodprice').innerHTML;
+    $("#btnsize1").click(function op1() {
+        $("#prodprice").text(parseFloat(a) * 1)
+        $("#totprice").text(parseFloat(a) * 1)
+    });
+    $("#btnsize2").click(function op2() {
+        $("#prodprice").text(parseFloat(a) * 2)
+        $("#totprice").text(parseFloat(a) * 2)
+    });
+    $("#btnsize3").click(function op3() {
+        $("#prodprice").text(parseFloat(a) * 10)
+        $("#totprice").text(parseFloat(a) * 10)
+    });
+    document.getElementById('mycartcounter').innerHTML={{pcount}}
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    function addcart(){
+        var p_id={{prod.id}}
+        var p_name=document.getElementById('prodname').innerHTML;
+        var p_price=document.getElementById('totprice').innerHTML;
+        var p_category=document.getElementById('pcat').innerHTML;
+        if (p_category=="Tools"){
+            var p_size=" "
+        }
+        else{
+            var p_size=document.querySelector('input[name="btnradio"]:checked').value
+        }
+        var p_desc=document.getElementById('proddesc').innerHTML;
+        var u_name=document.getElementById('navbarDropdownuser').innerHTML;
+        var x=u_name.trim()
+        $.ajax({
+            type: "POST",
+            url: "/mycart",
+            data: { prodid:p_id,uname:x,psize:p_size,pcat:p_category,prodname:p_name,prodprice:p_price,proddesc:p_desc, csrfmiddlewaretoken: csrftoken },
+            success: function () { 
+                document.location.reload(true);
+            }
+        });
+
+    }
+</script>
+
+{%endblock body%}

@@ -1,0 +1,247 @@
+{% extends 'index.html' %}
+{% block title %}
+Add Products
+{% endblock title %}
+
+{% block body %}
+<style>
+    body {
+        color: #000000;
+    }
+
+    h1 {
+        font-weight: 900;
+    }
+
+    .container {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        flex-direction: column;
+    }
+
+    .box {
+        width: 480px;
+        height: 640px;
+        font-size: 16px;
+        padding: 20px 40px;
+        background: #FFFFFF;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        border-radius: 10px;
+    }
+
+    .user {
+        margin-top: 50px;
+    }
+
+    {% comment %} .fas {
+        position: absolute;
+        color: #000000;
+    } {% endcomment %}
+
+    input {
+        width: 400px;
+        display: block;
+        margin-bottom: 25px;
+        padding: 0px 30px 5px;
+        font-size: 20px;
+        border: none;
+        border-bottom: 1px solid #0c0c0c;
+        outline: none;
+        background-color: transparent;
+        color: #000000;
+        transition: .3s all;
+    }
+
+    input:focus {
+        border-bottom: 2px solid #000000;
+    }
+
+    .mobile nav {
+        height: 55px;
+        background-color: #deeff9;
+        width: 100%
+    }
+
+    .d-flex {
+        margin-top: 23px;
+    }
+
+    .btnuserprod {
+        display: block;
+        width: 50%;
+        margin-left: 100px;
+        padding: 15px 15px 10px 15px;
+        background-color: #0212f5;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 20px;
+        font-weight: 600;
+        opacity: 0.8;
+        transition: .2s all;
+        cursor: pointer;
+    }
+
+    .btnuserprod:hover {
+        opacity: 1;
+
+    }
+
+    .selectclass {
+        width: 400px;
+        display: block;
+        margin-bottom: 25px;
+        padding: 0px 30px 5px;
+        font-size: 20px;
+        border: none;
+        border-bottom: 1px solid #0c0c0c;
+        outline: none;
+        background-color: transparent;
+        color: #000000;
+        transition: .3s all;
+    }
+
+
+    @media only screen and (max-width: 600px) {
+        .box {
+            width: 350px;
+            height: 650px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .mobile nav {
+            margin-top: -23px;
+        }
+
+        .box input {
+            width: 300px;
+            margin-left: -20px;
+        }
+
+        .signup_user .i {
+            margin-left: -25px;
+        }
+
+        {% comment %} .fas {
+            position: absolute;
+            font-size: 20px;
+            margin-left: -20px;
+            padding-top: 4px;
+            padding-left: 5px;
+            padding-right: 5px;
+        } {% endcomment %}
+
+        .mobile nav i {
+            position: absolute;
+            margin-left: -5px;
+            margin-top: -5px;
+        }
+
+        .menubarmob .menuclosesign {
+            left: 86%;
+        }
+
+        .mobile .menubarmob {
+            background-color: black;
+        }
+    }
+
+
+    @media only screen and (min-width: 700px) {
+        {% comment %} .fas {
+            position: absolute;
+            font-size: 20px;
+            padding-top: 6px;
+            padding-left: 5px;
+            padding-right: 15px;
+        } {% endcomment %}
+
+        .navbar {
+            margin-top: -24px;
+        }
+
+    }
+</style>
+{%if messages%}
+{%for messages in messages%}
+<div class="alert alert-{{messages.tags}} alert-dismissible fade show" role="alert">
+    <strong>Message:</strong>{{messages}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+</div>
+{%endfor%}
+{%endif%}
+<div class="addproducts">
+    <div class="container">
+        <div class="box" id="bbox" style="height: 560px;">
+            <h1>Product Details</h1>
+            <form method="POST" action="/addproduct" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="userproducts" style="margin-top: 35px;">
+                    <input type="text" name="uprodname" id="uprodname" pattern="[a-zA-Z].{3,}" required
+                        placeholder="Product Name">
+                    <input type="file" name="uprodicon"  id="uprodicon" required accept="image/*">
+                    <input type="number" name="uprodprice" id="uprodprice" required placeholder="Product Price">
+                    <input type="number" name="uprodquantity" id="uprodquantity" required
+                        placeholder="Product Quantity">
+                    <input type="text" name="uproddesc" id="uproddesc" pattern="[a-zA-Z].{,}" required
+                        placeholder="Product Description">
+                    <!-- <input type="text" name="uprodcat" id="uprodcat" pattern="[a-zA-Z].{3,}" required placeholder="Product Category"> -->
+                    <select required name="uprodcat" id="uprodcat" title="Enter valid Category"
+                        placeholder="Product Category" class="selectclass">
+                        <option value="Seeds">Seeds</option>
+                        <option value="Fertilizers">Fertilizers</option>
+                        <option value="Tools">Tools</option>
+                        <option value="Pesticides">Pesticides</option>
+                        <option value="Crops">Crops</option>
+                        <option value="Insecticide">Insecticides</option>
+                    </select>
+                    <button class="btnuserprod" id="btnuserprod" type="submit">Submit</button>
+                </div>
+
+
+
+        </div>
+        </form>
+    </div>
+</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    document.getElementById('searchinsite').onclick=function(){
+        location.href="/open_search";
+    }
+    $('#demosearchicon').css('top','3')
+    $('#demosearchicon').css('right','-8')
+    $(document).ready(function () {
+        
+        $('#dl1').css('margin-top', -710)
+        $('#navigationbar').css('margin-top', 0)
+    })
+</script>
+<script>
+    $('#uprodprice').click(function () {
+            $.ajax({
+                type: 'GET',
+                url: '/check_imgfile',
+                data:{
+                    checkfile:$('#uprodicon').val()
+                },
+                success: function (data) {
+                    if (data == "nook") {
+                        alert("upload image file")
+                        $('#sbtnuserprod').attr('disabled',true)
+                    }
+                    else if (data == "ok") {
+                        $('#btnuserprod').attr('disabled',false)
+                    }
+                    
+                }
+            })
+        })
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% endblock body %}

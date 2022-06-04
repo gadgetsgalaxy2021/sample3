@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    
+    {% block head %}
+    {% endblock head %}
+    <style>
+        @media only screen and (max-width: 600px) {
+            .pc {
+                display: none;
+            }
+
+            .menubarmob {
+                width: 220px;
+                height: 92vh;
+                background-color: black;
+                transition: .2s all;
+                position: absolute;
+                top: 0;
+                left: 0;
+                border-radius: 0px 15px 15px 0px;
+            }
+
+            .menuclosesign {
+                left: 83%;
+            }
+
+            .menuclosesign {
+                color: white;
+                font-size: 25px;
+                position: absolute;
+                left: 83%;
+                top: 1.5%;
+            }
+
+            .menuclosesign:hover {
+                color: red;
+            }
+
+            a {
+                text-decoration: none;
+            }
+
+            .menuitemsmob li {
+                color: white;
+                padding: 5px;
+            }
+
+            .menuitemsmob {
+                list-style: none;
+                padding-top: 70px;
+                font-size: 25px;
+            }
+        }
+
+        @media only screen and (min-width: 700px) {
+            .mobile {
+                display: none;
+            }
+
+            .carousel-control-next-icon {
+                background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'%3e%3cpath d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e")
+            }
+
+            .carousel-control-prev-icon {
+                background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'%3e%3cpath d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/%3e%3c/svg%3e");
+            }
+
+            .carousel-control-prev {
+                height: 100px;
+                width: 30px;
+                position:absolute;
+                top:auto;
+                bottom:auto;
+                left:2.5%;
+                margin-top: -200px;
+                margin-left:20px;
+                background: whitesmoke;
+            }
+            .carousel-control-next{
+                height: 100px;
+                width: 30px;
+                position:absolute;
+                top:auto;
+                bottom:auto;
+                right:3.5%;
+                margin-top: -200px;
+                margin-left:20px;
+                background: whitesmoke;
+            }
+        }
+
+        /* .card-group .card {
+            margin: 25px;
+            padding: 15px;
+            height: 270px;
+        } */
+        .col-md-3 {
+            display: inline-block;
+            margin-left: -4px;
+        }
+
+        .col-md-3 img {
+            width: 100%;
+            height: auto;
+        }
+
+        body .carousel-indicator li {
+            background-color: red;
+        }
+
+        body .no-padding {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    </style>
+    <title>Home | {% block title %}
+        {% endblock title %}</title>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light .d-md-none .d-lg-block pc" id="navigationbar" style="margin-top:0px;">
+        <div class="container-fluid" style="height: 50px;">
+            <a class="navbar-brand" href="#">E-Agro</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/home">Home</a>
+                    </li>
+                    {% if loggedin %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Products</a>
+                    </li>{% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Help</a>
+                    </li>
+                </ul>
+                <form class="d-flex" method="GET" action="/search_in_site">
+                    <input class="form-control me-2" id="searchinsite" name="itemnamesearch" type="search" placeholder="Search" aria-label="Search" style="width:600px;position: relative;right: 40px;" list="searchitems">
+                    <button class="btn btn-danger mx-3" id="demosearch" style="width: 38px;height: 38px;position: absolute;right: 175px;"><i class="fas fa-search demosearch" id="demosearchicon" ></i></button>
+                </form>
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown" style="list-style: none;margin-top:20px">
+                    <a class="nav-link dropdown-toggle" style="margin-top:-20px" href="#" id="navbarDropdownuser"
+                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{request.user}}
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownuser">
+                        <li><a class="dropdown-item" href="/usercarts">My Cart <i class="fas fa fa-shopping-cart fa-lg"
+                                    style="position: absolute;font-size: 20px;color: black;margin-left:20px;margin-top:3px"></i>
+                                <span id="mycartcounter" style="position:absolute;margin-left:42px;margin-top:-13px">0
+                                </span></a></li>
+                        <li><a class="dropdown-item" href="#">Update Details</a></li>
+                        <li><a class="dropdown-item" href="/addproduct">Add Products</a></li>
+                        <li><a class="dropdown-item" href="/myproducts">My Products</a></li>
+
+                    </ul>
+                </li>
+                <a href="/logoutuser"><button id="logout" type="button" class="btn btn-success"
+                        onclick=>LogOut</button></a>
+                {% else %}
+                <a href="/loginuser"><button id="login" type="button"
+                        class="btn btn-primary">Login</button></a>&nbsp;&nbsp;
+                <a href="/signup"><button id="signupuser" type="button"
+                        class="btn btn-success">Signup</button></a>&nbsp;&nbsp;
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    {% block body %}
+    <div class="container">
+        {% for product,range,nSlides in allProds%}
+        <h2 class="my-2">{{product.0.product_category}}</h2>
+        <div id="demo{{forloop.counter}}" class="carousel slide" data-interval="false">
+            <div class="container carousel-inner no-padding"  style="margin-top: 20px;margin-left: -30px;">
+                <div class="carousel-item active" data-interval="false">
+
+                    {% for j in product %}
+                    
+                    {% csrf_token %}
+                    <div class="col-sm-3 col-md-3" style="margin-right:-10px">
+                        <div class="card" style="width: 250px;height: 265px;;background:rgb(231, 231, 231);margin-left:65px;margin-right:20px">
+                            <img src='/media/images/{{j.product_icon}}' style="width:248px;height:160px;padding:7px"
+                                class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title" id="p_name{{j.id}}" style="text-align: center;;margin-top:-16px" name="prod_name">{{j.product_name}}</h5>
+                                <p class="card-text" id="p_price{{j.id}}" style="text-align: center;margin-top: 0px;" name="prod_price">${{j.product_price}}</p>
+                                {% comment %} <button  class="btn btn-primary cart"  style="margin-top:-16px;width:auto">Add to Cart</button> {% endcomment %}
+                                <a href="/products/{{j.id}}" id="qv{{j.id}}" class="btn btn-primary" 
+                                style="margin-left:58px;margin-top:-20px;width:100px">View</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% comment %} {% if forloop.counter < 5 %}
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                    <script>
+                        $('#sliderbtn1').attr('disabled',true)
+                        $('#sliderbtn2').attr('disabled',true)
+
+                    </script>
+                    {%endif%} {% endcomment %}
+                    {% comment %} <datalist id="searchitems">
+                        <option value="{{j.product_name}}">{{j.product_name}}</option> {% endcomment %}
+                    {% if forloop.counter|divisibleby:4 and forloop.counter > 0   %}
+                </div>
+
+                
+                <div class="carousel-item" data-interval="false">
+                    {% endif %}
+                    {% endfor %}
+                
+                </div>
+
+
+            </div>
+        </div>
+        <button class="carousel-control-prev" id="sliderbtn1" type="button"  data-bs-target="#demo{{forloop.counter}}" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" id="sldbtn1" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" id="sliderbtn2" type="button"
+            data-bs-target="#demo{{forloop.counter}}" data-bs-slide="next">
+            <span class="carousel-control-next-icon" id="sldbtn2" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+        {%endfor%}
+    </div>
+    <script>
+        document.getElementById('searchinsite').onclick=function(){
+            location.href="/open_search";
+        }
+    </script>
+    
+    {% endblock body %}
+
+    <div class="mobile">
+        <nav style="background-color: #fff">
+            <i class="fas fa-bars menubar" style="position: absolute;font-size: 30px;color: black;left:3%;top:2.4%"></i>
+            <i class="fas fa-search" style="font-size: 30px;color: black;position: absolute;left:15%;top:2.4%;"></i>
+            <p class="moblogo"
+                style="position: absolute;font-size: 30px;font-weight: 400;color:black;left: 38%;top:0.8%">
+                E-Agro</p>
+
+            {% if user.is_authenticated %}
+            <i class="fas fa-shopping-cart" style="position: absolute;font-size: 29px;color: black;left:77%;top:2%"></i>
+            <li class="nav-item dropdown" id="dl" style="list-style: none;">
+                <a class="nav-link dropdown-toggle" style="margin-top:-20px" href="#" id="navbarDropdownuser"
+                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user" id="ml"
+                        style="position: absolute;font-size: 30px;color: black;left:90%;top:80%"></i></a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdownuser"
+                    style="margin-top:40px;margin-left:170px">
+                    <li><a class="dropdown-item" href="usercart">My Cart<i class="fas fa fa-shopping-cart fa-lg"
+                                style="position: absolute;font-size: 20px;color: black;"></i>
+                            <span style="position:absolute;margin-left:42px;margin-top:-13px">0
+                            </span></a></li>
+                    <li><a class="dropdown-item" href="#">Update Details</a></li>
+                    <li><a class="dropdown-item" href="logoutuser">Logout</a></li>
+                </ul>
+            </li>
+            {% else %}
+            <li class="nav-item dropdown" id="dl1" style="list-style: none;">
+                <a class="nav-link dropdown-toggle" style="margin-top:-20px;margin-left:350px" href="#"
+                    id="navbarDropdownuser" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user" id="ml"
+                        style="position: absolute;font-size: 30px;color: black;left:90%;top:80%"></i></a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdownuser"
+                    style="margin-top:40px;margin-left:170px">
+                    <li><a class="dropdown-item" href="loginuser">Login</a></li>
+                    <li><a class="dropdown-item" href="signup">Signup</a></li>
+                </ul>
+            </li>
+            {% endif %}
+
+        </nav>
+        <div class="menubarmob">
+            <i class="fas fa-times-circle menuclosesign"></i>
+            <ul class="menuitemsmob">
+                <a href="#">
+                    <li>Home</li>
+                </a>
+                <a href="#">
+                    <li>Contact Us</li>
+                </a>
+                <a href="#">
+                    <li>Help</li>
+                </a>
+            </ul>
+
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        
+        document.getElementById('mycartcounter').innerHTML={{pcount}}
+        $(".menubarmob").hide();
+        $(".menubar").click(function () {
+            $(".menubarmob").show();
+
+        })
+        $(".menuclosesign").click(function () {
+            $(".menubarmob").hide();
+        })
+
+    </script>
+    
+
+</body>
+
+</html>

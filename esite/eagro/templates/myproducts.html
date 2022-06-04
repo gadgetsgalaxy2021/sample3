@@ -1,0 +1,63 @@
+{% extends 'index.html' %}
+{% block head %}
+{% block title %}
+My Products
+{% endblock title %}
+{% endblock head %}
+{% block body %}
+{% for j in uproducts %}
+{% csrf_token %}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-3">
+            {%for product,range,nSlides in allProds%}
+            {%for p in product%}
+            {%if p.product_name == j.product_name %}
+            <div class="row"><img src="/media/images/{{p.product_icon}}" style="margin-left:-30px;width:200px;height:150px;padding:7px"
+                    class="card-img-top" alt="not found">
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-md-8" style="margin-top: -140px;margin-left: 200px;margin-bottom: 45px;">
+        <h3 id="pname">{{j.product_name}}</h3>
+        <b>Description:&nbsp;&nbsp;</b><span id="proddesc">{{j.product_desc}}</span><br>
+        <b>Price:&nbsp;&nbsp;</b>$<span id="totprice{{j.id}}">{{j.product_price}}</span>
+        <div class="row my-4">
+            <a href="/products/{{j.id}}" id="qv{{j.id}}" style="width: auto;height: 38px;"
+                class="btn btn-primary">View</a>
+            <button class="btn btn-danger mx-3" onclick="removeprod({{j.id}})"
+                style="width: auto;height: 38px;">Remove</button>
+
+        </div>
+    </div>
+</div>
+<hr style="height:2px;border-width:0;margin-top:-30px;color:gray;background-color:grey">
+{% endfor %}
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    document.getElementById('searchinsite').onclick=function(){
+        location.href="/open_search";
+    }
+    $("#navigationbar").css('margin-top',-24)
+    function removeprod(pid) {
+        var loguser = "{{request.user}}"
+        var pid = pid
+        var pname = document.getElementById('pname').innerHTML;
+        $.ajax({
+            type: "GET",
+            url: "removefromuserproducts",
+            data: { loguser: loguser, pid: pid, pname: pname},
+            success: function (data) {
+            },
+            error: function () {
+            }
+        });
+        document.location.reload(true);
+    }
+</script>
+{% endblock body %}

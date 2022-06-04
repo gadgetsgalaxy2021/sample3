@@ -1,0 +1,222 @@
+{% extends 'index.html' %}
+{% block title %}
+My Cart
+{% endblock %}
+
+{% block body %}
+<style>
+    form{
+        width: 300px;
+        margin: 5px 0 -5px -90px;
+        text-align: center;
+    }
+    .value-button {
+        display: inline-block;
+        border: 1px solid #ddd;
+        margin: 0px;
+        width: 40px;
+        height: 30px;
+        text-align: center;
+        vertical-align: middle;
+        padding: -16px;
+        background: #eee;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .value-button:hover {
+        cursor: pointer;
+    }
+
+    form #decrease {
+        margin-right: -4px;
+        border-radius: 8px 0 0 8px;
+    }
+
+    form #increase {
+        margin-left: -4px;
+        border-radius: 0 8px 8px 0;
+    }
+
+    form #input-wrap {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    input#number {
+        text-align: center;
+        border: none;
+        /* border-top: 1px solid #ddd;
+        border-bottom: 1px solid #ddd; */
+        margin: 0px;
+        width: 35px;
+        height: 35.2px;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type="checkbox"]
+    {
+        width: 20px;
+        height: 20px;
+        margin-top: 65px;
+        position: absolute;
+        margin-left: -70px;
+    }
+
+</style>
+<script>
+    var a = 0,b=0,f=0,a1=0,a2=0,counter=0;
+    
+</script>
+
+{% for j in loguser %}
+{% csrf_token %}
+<div class="container my-4">
+    <div class="column" id="chkbox">
+        <input class="checkboxs" type="checkbox" id="{{j.cprod_id}}" name="{{request.user}}" value="{{j.cproduct_name}}">
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            {%for product,range,nSlides in allProds%}
+            {%for p in product%}
+            {%if p.product_name == j.cproduct_name %}
+            <div class="row"><img src="/media/images/{{p.product_icon}}" style="margin-left:-30px;width:200px;height:150px;padding:7px"
+                    class="card-img-top" alt="not found">
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-md-8" style="margin-top: -140px;margin-left: 200px;margin-bottom: 45px;">
+        <h3 id="pname">{{j.cproduct_name}}</h3>
+        <h5>{{j.cproduct_desc}}</h5>
+        {% if j.cproduct_cat != "Tools"%}
+        <b>Selected Size:</b> <span>{{j.cprod_size}}</span><br>
+        {%endif%}
+        <b>Price:&nbsp;&nbsp;</b>$<span id="totprice{{j.cprod_id}}">{{j.cproduct_price}}</span>
+        <script>
+            a = a + parseFloat({{ j.cproduct_price }});
+            f= f+parseFloat({{ j.cproduct_price }});
+            var c=parseFloat({{ j.cproduct_price }});
+        </script>
+        <form>
+            <div class="value-button"  id="decrease" onclick="decreaseValue({{j.cprod_id}},{{ j.cproduct_price }})" value="Decrease Value">-</div>
+            <input  type="number" style="width:35px;" id="number{{j.cprod_id}}" value="1" readonly />
+            <div class="value-button" id="increase" onclick="increaseValue({{j.cprod_id}},{{ j.cproduct_price }})" value="Increase Value">+</div>
+        </form>
+        <div class="row my-4">
+            <button class="btn btn-success mx-3" style="width: auto;height: 38px;">Buy Now</button>
+            <a href="/products/{{j.cprod_id}}" id="qv{{j.cprod_id}}" style="width: auto;height: 38px;"
+                class="btn btn-primary">View</a>
+            <button class="btn btn-danger mx-3" onclick="removeprod({{j.cprod_id}})"
+                style="width: auto;height: 38px;">Remove</button>
+
+        </div>
+    </div>
+</div>
+<hr style="height:2px;border-width:0;margin-top:-30px;color:gray;background-color:grey">
+{% endfor %}
+<h5 style="margin-left: 60px;margin-top:30px;" >Total: $<span id="finaltot">
+    
+</span>
+</h5>
+<form action="/selected_order" method="get">
+    <button class="btn btn-success" id="protocheck"
+    style="margin-left: 60px;width: auto;margin-top:25px;height: 38px;" >Proceede to CheckOut</button>
+    <br>
+    <br>
+    <input type="hidden" name="orderlis" id="orderlist">
+</form>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+
+    document.getElementById('mycartcounter').innerHTML={{pcount}}
+    document.getElementById('finaltot').innerHTML=a
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    function removeprod(pid) {
+        var loguser = "{{request.user}}"
+        var pid = pid
+        var pname = document.getElementById('pname').innerHTML;
+        $.ajax({
+            type: "POST",
+            url: "/removefromcart",
+            data: { loguser: loguser, pid: pid, pname: pname, csrfmiddlewaretoken: csrftoken },
+            success: function (data) {
+            },
+            error: function () {
+            }
+        });
+        document.location.reload(true);
+    }
+</script>
+<script>
+    var ft=parseInt(document.getElementById('finaltot').innerHTML)
+</script>
+<script>
+    var chklist=[]
+    {% comment %} a=$('#chklist input:checked[name="{{request.user}}"]').map(function(){
+        return $(this).val();}).get() {% endcomment %}
+    {% comment %} var chk=function(){
+        var n=$("input[type='checkbox']").val();
+        alert(n)
+    } {% endcomment %}
+    var l=[]
+    $('#protocheck').click(function(){
+        var ar=$('input[type=checkbox]:checked').map(function(){
+            l.push(this.value);
+        }).get()
+        document.getElementById('orderlist').value=l;
+        {% comment %} $.ajax({
+            type: "GET",
+            url: "/selected_order",
+            data: ({ sorder: l}),
+            success: function (data) {
+                location.href="/selected_order"
+            },
+            error: function () {
+            }
+        }); {% endcomment %}
+    });
+    document.getElementById('searchinsite').onclick=function(){
+        location.href="/open_search";
+    }
+    function increaseValue(pid,d) {
+        var value = parseInt(document.getElementById('number'+pid).value, 10);
+        value = isNaN(value) ? 0 : value;
+        value++;
+        document.getElementById('totprice'+pid).innerHTML=(value*parseFloat(d)).toFixed(2);
+        var p1=document.getElementById('totprice'+pid).innerHTML
+        a=a+(value*parseFloat(d))
+        a=a-((value-1)*parseFloat(d))
+        document.getElementById('number'+pid).value = value;
+        ft=ft+(d*value)-(d*(value-1))
+        document.getElementById('finaltot').innerHTML=ft
+    }
+
+    function decreaseValue(pid,d) {
+        var value = parseInt(document.getElementById('number'+pid).value, 10);
+        value = isNaN(value) ? 0 : value;
+        value < 1 ? value = 1 : '';
+        value--;
+        if (value>=1){
+        document.getElementById('totprice'+pid).innerHTML=(value*parseFloat(d));
+        var p2=document.getElementById('totprice'+pid).innerHTML
+        a=a-(value*parseFloat(d))
+        a=a+((value-1)*parseFloat(d))
+        document.getElementById('number'+pid).value = value;
+        ft=ft-(d*value)+(d*(value-1))
+        document.getElementById('finaltot').innerHTML=ft
+        }
+    }
+</script>
+
+{%endblock body%}
