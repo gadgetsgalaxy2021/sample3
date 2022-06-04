@@ -1,5 +1,4 @@
 from django.shortcuts import render,redirect,HttpResponse
-from numpy import cumproduct
 from .models import signupUser,product,usercart
 from math import ceil
 from django.contrib.auth.hashers import make_password
